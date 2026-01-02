@@ -1,0 +1,10 @@
+# Security Policy for Sanni Kumar Gupta Portfolio
+# This file follows the security.txt standard
+# https://securitytxt.org/
+
+Contact: mailto:sannikumargupta43@gmail.com
+Preferred-Languages: en, hi
+Expires: 2027-01-01T00:00:00.000Z
+
+# If you discover a security vulnerability in this website,
+# please report it responsibly to the contact email above.

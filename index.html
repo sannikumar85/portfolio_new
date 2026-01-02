@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Security Meta Tags -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: blob: https://images.unsplash.com;
+      media-src 'self' blob:;
+      connect-src 'self' https://formspree.io;
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'self' https://formspree.io;
+    " />
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Sanni Kumar Gupta - Full Stack Developer, MERN Stack Developer, App Developer. Building modern web and mobile applications." />
+    <meta name="keywords" content="Sanni Kumar Gupta, Full Stack Developer, MERN Stack, React Developer, Web Developer, App Developer, Portfolio" />
+    <meta name="author" content="Sanni Kumar Gupta" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Sanni Kumar Gupta - Full Stack Developer Portfolio" />
+    <meta property="og:description" content="Full Stack Developer specializing in MERN Stack, React, and Mobile App Development" />
+    <meta property="og:site_name" content="Sanni Portfolio" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sanni Kumar Gupta - Full Stack Developer" />
+    <meta name="twitter:description" content="Full Stack Developer specializing in MERN Stack, React, and Mobile App Development" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Prevent clickjacking -->
+    <style>
+      html { display: none; }
+    </style>
+    <script>
+      if (self === top) {
+        document.documentElement.style.display = 'block';
+      } else {
+        top.location = self.location;
+      }
+    </script>
+    
+    <title>Sanni Kumar Gupta | Full Stack Developer Portfolio</title>
+  </head>
+  <body>
+    <noscript>
+      <div style="padding: 20px; text-align: center; background: #1a1a2e; color: #00ff88; font-family: sans-serif;">
+        <h1>JavaScript Required</h1>
+        <p>Please enable JavaScript to view this portfolio website.</p>
+      </div>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
