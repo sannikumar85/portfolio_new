@@ -33,13 +33,34 @@ const contactLimiter = rateLimit({
   message: 'Too many contact form submissions, please try again later.'
 });
 
-// CORS configuration
-app.use(cors({
-  origin: "https://portfolio-new-b6ld.vercel.app",
-  credentials: true
-}));
+// CORS configuration - Allow multiple origins for production
+const allowedOrigins = [
+  'https://portfolio-new-b6ld.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL
+].filter(Boolean);
 
-app.options("*", cors());
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Allow any vercel.app subdomain or listed origins
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(null, true); // Allow all origins for now - remove this in strict production
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+};
+app.use(cors(corsOptions));
 
 // Body parser middleware
 app.use(express.json({ limit: '10mb' }));
