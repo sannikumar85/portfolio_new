@@ -48,6 +48,31 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Serve static files (admin panel)
 app.use('/admin', express.static(path.join(__dirname, 'public')));
 
+// Root route - API health check
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Portfolio API is running',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      contact: '/api/contact',
+      messages: '/api/messages',
+      login: '/api/admin/login',
+      admin: '/admin'
+    }
+  });
+});
+
+// API health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'API is healthy',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Serve admin panel at root admin route
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
