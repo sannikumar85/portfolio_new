@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiSend, FiArrowUpRight, FiCheckCircle, FiZap, FiGithub, FiLinkedin, FiTwitter } from 'react-icons/fi';
 import { useTheme } from '../context/ThemeContext';
 
+// API Base URL - change this based on environment
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const Contact = () => {
   const { isDark } = useTheme();
   const [formData, setFormData] = useState({
@@ -116,8 +119,8 @@ const Contact = () => {
     };
     
     try {
-      // Send to Formspree
-      const response = await fetch('https://formspree.io/f/xyzgkpzb', {
+      // Send to backend API
+      const response = await fetch(`${API_BASE_URL}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +179,9 @@ const Contact = () => {
     <section
       ref={sectionRef}
       id="contact"
-      className="relative py-24 overflow-hidden bg-black"
+      className={`relative py-24 overflow-hidden transition-colors duration-300 ${
+        isDark ? 'bg-black' : 'bg-gradient-to-br from-gray-50 via-white to-emerald-50/30'
+      }`}
     >
       {/* Animated Matrix-style background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -185,8 +190,8 @@ const Contact = () => {
           className="absolute inset-0 opacity-10"
           style={{
             backgroundImage: `
-              linear-gradient(#00ff88 1px, transparent 1px),
-              linear-gradient(90deg, #00ff88 1px, transparent 1px)
+              linear-gradient(${isDark ? '#00ff88' : '#10b981'} 1px, transparent 1px),
+              linear-gradient(90deg, ${isDark ? '#00ff88' : '#10b981'} 1px, transparent 1px)
             `,
             backgroundSize: '50px 50px',
             animation: 'gridMove 20s linear infinite'
@@ -197,8 +202,12 @@ const Contact = () => {
         <div 
           className={`absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full blur-3xl transition-all duration-1000 ${isVisible ? 'opacity-30' : 'opacity-0'}`}
           style={{ 
-            background: 'radial-gradient(circle, rgba(0, 255, 136, 0.4) 0%, rgba(57, 255, 20, 0.2) 50%, transparent 70%)',
-            boxShadow: '0 0 100px rgba(0, 255, 136, 0.5), inset 0 0 100px rgba(0, 255, 136, 0.3)',
+            background: isDark 
+              ? 'radial-gradient(circle, rgba(0, 255, 136, 0.4) 0%, rgba(57, 255, 20, 0.2) 50%, transparent 70%)'
+              : 'radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(34, 197, 94, 0.15) 50%, transparent 70%)',
+            boxShadow: isDark 
+              ? '0 0 100px rgba(0, 255, 136, 0.5), inset 0 0 100px rgba(0, 255, 136, 0.3)'
+              : '0 0 100px rgba(16, 185, 129, 0.4), inset 0 0 100px rgba(16, 185, 129, 0.2)',
             animation: 'float 8s ease-in-out infinite, glow-pulse 3s ease-in-out infinite',
             transform: 'translateZ(100px)'
           }}
@@ -206,43 +215,57 @@ const Contact = () => {
         <div 
           className={`absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full blur-3xl transition-all duration-1000 delay-300 ${isVisible ? 'opacity-30' : 'opacity-0'}`}
           style={{ 
-            background: 'radial-gradient(circle, rgba(57, 255, 20, 0.4) 0%, rgba(0, 255, 136, 0.2) 50%, transparent 70%)',
-            boxShadow: '0 0 100px rgba(57, 255, 20, 0.5), inset 0 0 100px rgba(57, 255, 20, 0.3)',
+            background: isDark 
+              ? 'radial-gradient(circle, rgba(57, 255, 20, 0.4) 0%, rgba(0, 255, 136, 0.2) 50%, transparent 70%)'
+              : 'radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, rgba(16, 185, 129, 0.15) 50%, transparent 70%)',
+            boxShadow: isDark 
+              ? '0 0 100px rgba(57, 255, 20, 0.5), inset 0 0 100px rgba(57, 255, 20, 0.3)'
+              : '0 0 100px rgba(34, 197, 94, 0.4), inset 0 0 100px rgba(34, 197, 94, 0.2)',
             animation: 'float 10s ease-in-out infinite, glow-pulse 3s ease-in-out infinite',
             animationDelay: '1s, 0.5s',
             transform: 'translateZ(50px)'
           }}
         />
         
-        {/* Floating 3D particles */}
-        {[...Array(15)].map((_, i) => (
+        {/* Floating particles - simplified */}
+        {[...Array(8)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-[#00ff88] rounded-full"
+            className={`absolute w-1 h-1 rounded-full ${
+              isDark ? 'bg-[#00ff88]' : 'bg-emerald-500'
+            }`}
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              boxShadow: '0 0 10px #00ff88, 0 0 20px #00ff88',
               animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
               animationDelay: `${Math.random() * 3}s`,
-              opacity: 0.3 + Math.random() * 0.4,
-              transform: `translateZ(${Math.random() * 100}px)`
+              opacity: 0.2 + Math.random() * 0.3
             }}
           />
         ))}
-        
-        {/* Scan lines effect */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00ff88]/5 to-transparent animate-scan" />
+
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with 3D text */}
         <div className={`text-center mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold mb-8 bg-black border-2 border-[#00ff88] text-[#00ff88] relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#00ff88]/20 to-[#39ff14]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <span className={`inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold mb-8 border-2 relative overflow-hidden group transition-colors duration-300 ${
+            isDark 
+              ? 'bg-black border-[#00ff88] text-[#00ff88]'
+              : 'bg-white border-emerald-500 text-emerald-600'
+          }`}>
+            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+              isDark 
+                ? 'bg-gradient-to-r from-[#00ff88]/20 to-[#39ff14]/20'
+                : 'bg-gradient-to-r from-emerald-500/20 to-green-500/20'
+            }`} />
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00ff88] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00ff88]"></span>
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                isDark ? 'bg-[#00ff88]' : 'bg-emerald-500'
+              }`}></span>
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${
+                isDark ? 'bg-[#00ff88]' : 'bg-emerald-500'
+              }`}></span>
             </span>
             <FiZap className="w-4 h-4" />
             <span className="relative">AVAILABLE FOR PROJECTS</span>
@@ -252,39 +275,48 @@ const Contact = () => {
             className="text-5xl md:text-7xl font-black mb-6"
             style={{
               fontFamily: 'Bebas Neue, sans-serif',
-              textShadow: `
-                0 0 20px rgba(0, 255, 136, 1),
-                0 0 40px rgba(0, 255, 136, 0.8),
-                0 0 60px rgba(0, 255, 136, 0.6),
-                4px 4px 8px rgba(0, 0, 0, 0.9),
-                8px 8px 0px rgba(0, 255, 136, 0.4),
-                12px 12px 0px rgba(0, 255, 136, 0.2),
-                16px 16px 0px rgba(0, 255, 136, 0.1)
-              `,
+              textShadow: isDark 
+                ? `
+                  0 0 20px rgba(0, 255, 136, 1),
+                  0 0 40px rgba(0, 255, 136, 0.8),
+                  0 0 60px rgba(0, 255, 136, 0.6),
+                  4px 4px 8px rgba(0, 0, 0, 0.9),
+                  8px 8px 0px rgba(0, 255, 136, 0.4),
+                  12px 12px 0px rgba(0, 255, 136, 0.2),
+                  16px 16px 0px rgba(0, 255, 136, 0.1)
+                `
+                : `
+                  0 0 15px rgba(16, 185, 129, 0.8),
+                  0 0 30px rgba(16, 185, 129, 0.6),
+                  0 0 45px rgba(16, 185, 129, 0.4),
+                  2px 2px 4px rgba(0, 0, 0, 0.3),
+                  4px 4px 0px rgba(16, 185, 129, 0.3),
+                  6px 6px 0px rgba(16, 185, 129, 0.15),
+                  8px 8px 0px rgba(16, 185, 129, 0.08)
+                `,
               transform: 'translateZ(50px)',
               letterSpacing: '0.05em'
             }}
           >
-            <span className="text-white">LET'S </span>
-            <span className="text-[#00ff88] animate-text3dFloat inline-block">CONNECT</span>
+            <span className={isDark ? 'text-white' : 'text-gray-900'}>LET'S </span>
+            <span className={`animate-text3dFloat inline-block ${
+              isDark ? 'text-[#00ff88]' : 'text-emerald-600'
+            }`}>CONNECT</span>
           </h2>
           
-          <p className="max-w-2xl mx-auto text-lg text-gray-400 font-medium">
-            Ready to bring your ideas to life? Drop me a message and let's create something extraordinary together.
+          <p className={`max-w-2xl mx-auto text-lg font-medium transition-colors duration-300 ${
+            isDark ? 'text-gray-400' : 'text-gray-600'
+          }`}>
+            Ready to work together? Send me a message and let's discuss your project.
           </p>
           
           {/* Decorative 3D divider */}
           <div className="flex items-center justify-center gap-3 mt-8">
-            <div className="w-16 h-1 bg-gradient-to-r from-transparent to-[#00ff88] rounded-full" 
-              style={{ boxShadow: '0 0 10px #00ff88' }} />
-            <div className="w-3 h-3 rounded-full bg-[#00ff88] animate-pulse" 
-              style={{ boxShadow: '0 0 15px #00ff88, 0 0 30px #00ff88' }} />
-            <div className="w-32 h-1 bg-gradient-to-r from-[#00ff88] via-[#39ff14] to-[#00ff88] rounded-full" 
-              style={{ boxShadow: '0 0 10px #00ff88' }} />
-            <div className="w-3 h-3 rounded-full bg-[#39ff14] animate-pulse" 
-              style={{ boxShadow: '0 0 15px #39ff14, 0 0 30px #39ff14', animationDelay: '0.5s' }} />
-            <div className="w-16 h-1 bg-gradient-to-r from-[#39ff14] to-transparent rounded-full" 
-              style={{ boxShadow: '0 0 10px #39ff14' }} />
+            <div className={`w-32 h-1 rounded-full ${
+              isDark 
+                ? 'bg-gradient-to-r from-[#00ff88] to-[#39ff14]'
+                : 'bg-gradient-to-r from-emerald-500 to-green-500'
+            }`} />
           </div>
         </div>
 
@@ -301,47 +333,83 @@ const Contact = () => {
             }}
           >
             <div 
-              className="relative rounded-2xl p-8 md:p-10 overflow-hidden bg-black border-2 border-[#00ff88]/30 backdrop-blur-xl group hover:border-[#00ff88] transition-all duration-500"
+              className={`relative rounded-2xl p-8 md:p-10 overflow-hidden border-2 backdrop-blur-xl group hover:border-[#00ff88] transition-all duration-500 ${
+                isDark 
+                  ? 'bg-black/95 border-[#00ff88]/30'
+                  : 'bg-gradient-to-br from-white via-emerald-50/20 to-white border-emerald-500/30 hover:border-emerald-500'
+              }`}
               style={{
-                boxShadow: `
-                  0 0 30px rgba(0, 255, 136, 0.3),
-                  0 0 60px rgba(0, 255, 136, 0.1),
-                  inset 0 0 30px rgba(0, 255, 136, 0.05)
-                `,
+                boxShadow: isDark 
+                  ? `
+                    0 0 30px rgba(0, 255, 136, 0.3),
+                    0 0 60px rgba(0, 255, 136, 0.1),
+                    inset 0 0 30px rgba(0, 255, 136, 0.05)
+                  `
+                  : `
+                    0 8px 32px rgba(0, 0, 0, 0.08),
+                    0 4px 16px rgba(0, 0, 0, 0.04),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.8)
+                  `,
               }}
             >
               {/* 3D corner accents */}
-              <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-[#00ff88] rounded-tl-2xl"
-                style={{ boxShadow: '-5px -5px 15px rgba(0, 255, 136, 0.5)' }} />
-              <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-[#39ff14] rounded-br-2xl"
-                style={{ boxShadow: '5px 5px 15px rgba(57, 255, 20, 0.5)' }} />
+              <div className={`absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 rounded-tl-2xl ${
+                isDark ? 'border-[#00ff88]' : 'border-emerald-500'
+              }`}
+                style={{ 
+                  boxShadow: isDark 
+                    ? '-5px -5px 15px rgba(0, 255, 136, 0.5)' 
+                    : '-5px -5px 15px rgba(16, 185, 129, 0.4)'
+                }} />
+              <div className={`absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 rounded-br-2xl ${
+                isDark ? 'border-[#39ff14]' : 'border-green-500'
+              }`}
+                style={{ 
+                  boxShadow: isDark 
+                    ? '5px 5px 15px rgba(57, 255, 20, 0.5)' 
+                    : '5px 5px 15px rgba(34, 197, 94, 0.4)'
+                }} />
 
               {/* Success Message - 3D */}
               {isSubmitted && (
-                <div className="absolute inset-0 flex items-center justify-center z-20 rounded-2xl bg-black/95 backdrop-blur-sm">
+                <div className={`absolute inset-0 flex items-center justify-center z-20 rounded-2xl backdrop-blur-sm ${
+                  isDark ? 'bg-black/95' : 'bg-white/95'
+                }`}>
                   <div className="text-center" style={{ animation: 'bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)' }}>
                     <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center relative"
                       style={{
-                        background: 'radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, transparent 70%)',
-                        boxShadow: '0 0 40px rgba(0, 255, 136, 0.6), inset 0 0 40px rgba(0, 255, 136, 0.2)'
+                        background: isDark 
+                          ? 'radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, transparent 70%)'
+                          : 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)',
+                        boxShadow: isDark 
+                          ? '0 0 40px rgba(0, 255, 136, 0.6), inset 0 0 40px rgba(0, 255, 136, 0.2)'
+                          : '0 0 40px rgba(16, 185, 129, 0.5), inset 0 0 40px rgba(16, 185, 129, 0.15)'
                       }}>
-                      <FiCheckCircle className="w-12 h-12 text-[#00ff88]" 
+                      <FiCheckCircle className={`w-12 h-12 ${
+                        isDark ? 'text-[#00ff88]' : 'text-emerald-600'
+                      }`} 
                         style={{ 
-                          filter: 'drop-shadow(0 0 10px #00ff88)',
+                          filter: isDark 
+                            ? 'drop-shadow(0 0 10px #00ff88)' 
+                            : 'drop-shadow(0 0 10px #10b981)',
                           animation: 'float 2s ease-in-out infinite'
                         }} />
                     </div>
                     <h3 
-                      className="text-3xl font-black mb-3 text-[#00ff88]"
+                      className={`text-3xl font-black mb-3 ${
+                        isDark ? 'text-[#00ff88]' : 'text-emerald-600'
+                      }`}
                       style={{
                         fontFamily: 'Bebas Neue, sans-serif',
-                        textShadow: '0 0 20px rgba(0, 255, 136, 0.8), 0 0 40px rgba(0, 255, 136, 0.4)',
+                        textShadow: isDark 
+                          ? '0 0 20px rgba(0, 255, 136, 0.8), 0 0 40px rgba(0, 255, 136, 0.4)'
+                          : '0 0 15px rgba(16, 185, 129, 0.6), 0 0 30px rgba(16, 185, 129, 0.3)',
                         letterSpacing: '0.1em'
                       }}
                     >
                       MESSAGE SENT!
                     </h3>
-                    <p className="text-gray-400">I'll get back to you ASAP!</p>
+                    <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>I'll get back to you ASAP!</p>
                   </div>
                 </div>
               )}
@@ -351,7 +419,9 @@ const Contact = () => {
                   {/* Name Input - 3D Style */}
                   <div className="group">
                     <label className={`flex items-center gap-2 text-sm font-bold mb-3 uppercase tracking-wider transition-colors ${
-                      focusedField === 'name' ? 'text-[#00ff88]' : 'text-gray-500'
+                      focusedField === 'name' 
+                        ? (isDark ? 'text-[#00ff88]' : 'text-emerald-600') 
+                        : (isDark ? 'text-gray-500' : 'text-gray-600')
                     }`} style={{ fontFamily: 'Rajdhani, sans-serif' }}>
                       <FiUser className="w-4 h-4" />
                       Your Name
@@ -369,22 +439,40 @@ const Contact = () => {
                         maxLength={100}
                         autoComplete="name"
                         placeholder="John Doe"
-                        className="w-full px-5 py-4 rounded-xl bg-black border-2 border-gray-800 text-white placeholder-gray-600 outline-none transition-all duration-300 focus:border-[#00ff88] focus:bg-gray-900/50 font-medium"
+                        className={`w-full px-5 py-4 rounded-xl border-2 outline-none transition-all duration-300 font-medium ${
+                          isDark
+                            ? `bg-black/90 border-gray-700 text-white placeholder-gray-500 focus:border-[#00ff88] focus:bg-gray-900/70`
+                            : `bg-gray-50/80 border-gray-200 text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:bg-white hover:bg-white`
+                        }`}
                         style={{
                           boxShadow: focusedField === 'name' 
-                            ? '0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1)' 
-                            : 'inset 0 2px 4px rgba(0, 0, 0, 0.5)'
+                            ? (isDark 
+                                ? '0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1)' 
+                                : '0 0 20px rgba(16, 185, 129, 0.2), inset 0 0 20px rgba(16, 185, 129, 0.08)')
+                            : (isDark 
+                                ? 'inset 0 2px 4px rgba(0, 0, 0, 0.5)' 
+                                : 'inset 0 2px 4px rgba(0, 0, 0, 0.1)')
                         }}
                       />
-                      <div className={`absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-[#00ff88] to-[#39ff14] transition-all duration-300 rounded-full ${focusedField === 'name' ? 'w-full' : 'w-0'}`}
-                        style={{ boxShadow: '0 0 10px #00ff88' }} />
+                      <div className={`absolute -bottom-1 left-0 h-1 rounded-full transition-all duration-300 ${
+                        focusedField === 'name' ? 'w-full' : 'w-0'
+                      } ${
+                        isDark 
+                          ? 'bg-gradient-to-r from-[#00ff88] to-[#39ff14]' 
+                          : 'bg-gradient-to-r from-emerald-500 to-green-500'
+                      }`}
+                        style={{ 
+                          boxShadow: isDark ? '0 0 10px #00ff88' : '0 0 10px #10b981' 
+                        }} />
                     </div>
                   </div>
 
                   {/* Email Input - 3D Style */}
                   <div className="group">
                     <label className={`flex items-center gap-2 text-sm font-bold mb-3 uppercase tracking-wider transition-colors ${
-                      focusedField === 'email' ? 'text-[#00ff88]' : 'text-gray-500'
+                      focusedField === 'email' 
+                        ? (isDark ? 'text-[#00ff88]' : 'text-emerald-600') 
+                        : (isDark ? 'text-gray-500' : 'text-gray-600')
                     }`} style={{ fontFamily: 'Rajdhani, sans-serif' }}>
                       <FiMail className="w-4 h-4" />
                       Email Address
@@ -402,15 +490,31 @@ const Contact = () => {
                         autoComplete="email"
                         pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
                         placeholder="john@example.com"
-                        className="w-full px-5 py-4 rounded-xl bg-black border-2 border-gray-800 text-white placeholder-gray-600 outline-none transition-all duration-300 focus:border-[#00ff88] focus:bg-gray-900/50 font-medium"
+                        className={`w-full px-5 py-4 rounded-xl border-2 outline-none transition-all duration-300 font-medium ${
+                          isDark
+                            ? `bg-black/90 border-gray-700 text-white placeholder-gray-500 focus:border-[#00ff88] focus:bg-gray-900/70`
+                            : `bg-gray-50/80 border-gray-200 text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:bg-white hover:bg-white`
+                        }`}
                         style={{
                           boxShadow: focusedField === 'email' 
-                            ? '0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1)' 
-                            : 'inset 0 2px 4px rgba(0, 0, 0, 0.5)'
+                            ? (isDark 
+                                ? '0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1)' 
+                                : '0 0 20px rgba(16, 185, 129, 0.2), inset 0 0 20px rgba(16, 185, 129, 0.08)')
+                            : (isDark 
+                                ? 'inset 0 2px 4px rgba(0, 0, 0, 0.5)' 
+                                : 'inset 0 2px 4px rgba(0, 0, 0, 0.1)')
                         }}
                       />
-                      <div className={`absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-[#00ff88] to-[#39ff14] transition-all duration-300 rounded-full ${focusedField === 'email' ? 'w-full' : 'w-0'}`}
-                        style={{ boxShadow: '0 0 10px #00ff88' }} />
+                      <div className={`absolute -bottom-1 left-0 h-1 rounded-full transition-all duration-300 ${
+                        focusedField === 'email' ? 'w-full' : 'w-0'
+                      } ${
+                        isDark 
+                          ? 'bg-gradient-to-r from-[#00ff88] to-[#39ff14]' 
+                          : 'bg-gradient-to-r from-emerald-500 to-green-500'
+                      }`}
+                        style={{ 
+                          boxShadow: isDark ? '0 0 10px #00ff88' : '0 0 10px #10b981' 
+                        }} />
                     </div>
                   </div>
                 </div>
@@ -418,7 +522,9 @@ const Contact = () => {
                 {/* Phone Input - 3D Style */}
                 <div className="group">
                   <label className={`flex items-center gap-2 text-sm font-bold mb-3 uppercase tracking-wider transition-colors ${
-                    focusedField === 'mobile' ? 'text-[#00ff88]' : 'text-gray-500'
+                    focusedField === 'mobile' 
+                      ? (isDark ? 'text-[#00ff88]' : 'text-emerald-600') 
+                      : (isDark ? 'text-gray-500' : 'text-gray-600')
                   }`} style={{ fontFamily: 'Rajdhani, sans-serif' }}>
                     <FiPhone className="w-4 h-4" />
                     Phone Number
@@ -435,22 +541,40 @@ const Contact = () => {
                       autoComplete="tel"
                       pattern="[\d\s\-+()]{10,15}"
                       placeholder="+91 9876543210"
-                      className="w-full px-5 py-4 rounded-xl bg-black border-2 border-gray-800 text-white placeholder-gray-600 outline-none transition-all duration-300 focus:border-[#00ff88] focus:bg-gray-900/50 font-medium"
+                      className={`w-full px-5 py-4 rounded-xl border-2 outline-none transition-all duration-300 font-medium ${
+                        isDark
+                          ? `bg-black/90 border-gray-700 text-white placeholder-gray-500 focus:border-[#00ff88] focus:bg-gray-900/70`
+                          : `bg-gray-50/80 border-gray-200 text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:bg-white hover:bg-white`
+                      }`}
                       style={{
                         boxShadow: focusedField === 'mobile' 
-                          ? '0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1)' 
-                          : 'inset 0 2px 4px rgba(0, 0, 0, 0.5)'
+                          ? (isDark 
+                              ? '0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1)' 
+                              : '0 0 20px rgba(16, 185, 129, 0.2), inset 0 0 20px rgba(16, 185, 129, 0.08)')
+                          : (isDark 
+                              ? 'inset 0 2px 4px rgba(0, 0, 0, 0.5)' 
+                              : 'inset 0 2px 4px rgba(0, 0, 0, 0.1)')
                       }}
                     />
-                    <div className={`absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-[#00ff88] to-[#39ff14] transition-all duration-300 rounded-full ${focusedField === 'mobile' ? 'w-full' : 'w-0'}`}
-                      style={{ boxShadow: '0 0 10px #00ff88' }} />
+                    <div className={`absolute -bottom-1 left-0 h-1 rounded-full transition-all duration-300 ${
+                      focusedField === 'mobile' ? 'w-full' : 'w-0'
+                    } ${
+                      isDark 
+                        ? 'bg-gradient-to-r from-[#00ff88] to-[#39ff14]' 
+                        : 'bg-gradient-to-r from-emerald-500 to-green-500'
+                    }`}
+                      style={{ 
+                        boxShadow: isDark ? '0 0 10px #00ff88' : '0 0 10px #10b981' 
+                      }} />
                   </div>
                 </div>
 
                 {/* Message Textarea - 3D Style */}
                 <div className="group">
                   <label className={`flex items-center gap-2 text-sm font-bold mb-3 uppercase tracking-wider transition-colors ${
-                    focusedField === 'message' ? 'text-[#00ff88]' : 'text-gray-500'
+                    focusedField === 'message' 
+                      ? (isDark ? 'text-[#00ff88]' : 'text-emerald-600') 
+                      : (isDark ? 'text-gray-500' : 'text-gray-600')
                   }`} style={{ fontFamily: 'Rajdhani, sans-serif' }}>
                     <FiSend className="w-4 h-4" />
                     Your Message
@@ -467,15 +591,31 @@ const Contact = () => {
                       maxLength={1000}
                       rows="5"
                       placeholder="Tell me about your project..."
-                      className="w-full px-5 py-4 rounded-xl bg-black border-2 border-gray-800 text-white placeholder-gray-600 outline-none resize-none transition-all duration-300 focus:border-[#00ff88] focus:bg-gray-900/50 font-medium"
+                      className={`w-full px-5 py-4 rounded-xl border-2 outline-none resize-none transition-all duration-300 font-medium ${
+                        isDark
+                          ? `bg-black/90 border-gray-700 text-white placeholder-gray-500 focus:border-[#00ff88] focus:bg-gray-900/70`
+                          : `bg-gray-50/80 border-gray-200 text-gray-800 placeholder-gray-400 focus:border-emerald-500 focus:bg-white hover:bg-white`
+                      }`}
                       style={{
                         boxShadow: focusedField === 'message' 
-                          ? '0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1)' 
-                          : 'inset 0 2px 4px rgba(0, 0, 0, 0.5)'
+                          ? (isDark 
+                              ? '0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.1)' 
+                              : '0 0 20px rgba(16, 185, 129, 0.2), inset 0 0 20px rgba(16, 185, 129, 0.08)')
+                          : (isDark 
+                              ? 'inset 0 2px 4px rgba(0, 0, 0, 0.5)' 
+                              : 'inset 0 2px 4px rgba(0, 0, 0, 0.1)')
                       }}
                     ></textarea>
-                    <div className={`absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-[#00ff88] to-[#39ff14] transition-all duration-300 rounded-full ${focusedField === 'message' ? 'w-full' : 'w-0'}`}
-                      style={{ boxShadow: '0 0 10px #00ff88' }} />
+                    <div className={`absolute -bottom-1 left-0 h-1 rounded-full transition-all duration-300 ${
+                      focusedField === 'message' ? 'w-full' : 'w-0'
+                    } ${
+                      isDark 
+                        ? 'bg-gradient-to-r from-[#00ff88] to-[#39ff14]' 
+                        : 'bg-gradient-to-r from-emerald-500 to-green-500'
+                    }`}
+                      style={{ 
+                        boxShadow: isDark ? '0 0 10px #00ff88' : '0 0 10px #10b981' 
+                      }} />
                   </div>
                 </div>
 
@@ -483,35 +623,60 @@ const Contact = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative w-full py-5 px-8 rounded-xl font-black text-lg text-black overflow-hidden transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`group relative w-full py-5 px-8 rounded-xl font-black text-lg overflow-hidden transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isDark ? 'text-black' : 'text-white'
+                  }`}
                   style={{
                     fontFamily: 'Bebas Neue, sans-serif',
                     letterSpacing: '0.1em',
-                    background: 'linear-gradient(135deg, #00ff88 0%, #39ff14 100%)',
-                    boxShadow: `
-                      0 0 30px rgba(0, 255, 136, 0.6),
-                      0 0 60px rgba(0, 255, 136, 0.3),
-                      inset 0 0 20px rgba(255, 255, 255, 0.3),
-                      0 10px 30px rgba(0, 0, 0, 0.5)
-                    `,
+                    background: isDark 
+                      ? 'linear-gradient(135deg, #00ff88 0%, #39ff14 100%)'
+                      : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    boxShadow: isDark 
+                      ? `
+                        0 0 30px rgba(0, 255, 136, 0.6),
+                        0 0 60px rgba(0, 255, 136, 0.3),
+                        inset 0 0 20px rgba(255, 255, 255, 0.3),
+                        0 10px 30px rgba(0, 0, 0, 0.5)
+                      `
+                      : `
+                        0 0 25px rgba(16, 185, 129, 0.4),
+                        0 0 50px rgba(16, 185, 129, 0.2),
+                        inset 0 0 15px rgba(255, 255, 255, 0.4),
+                        0 8px 25px rgba(0, 0, 0, 0.15)
+                      `,
                     transform: 'translateZ(10px)'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = `
-                      0 0 50px rgba(0, 255, 136, 0.8),
-                      0 0 100px rgba(0, 255, 136, 0.4),
-                      inset 0 0 30px rgba(255, 255, 255, 0.4),
-                      0 15px 40px rgba(0, 0, 0, 0.6)
-                    `;
+                    e.currentTarget.style.boxShadow = isDark 
+                      ? `
+                        0 0 50px rgba(0, 255, 136, 0.8),
+                        0 0 100px rgba(0, 255, 136, 0.4),
+                        inset 0 0 30px rgba(255, 255, 255, 0.4),
+                        0 15px 40px rgba(0, 0, 0, 0.6)
+                      `
+                      : `
+                        0 0 35px rgba(16, 185, 129, 0.6),
+                        0 0 70px rgba(16, 185, 129, 0.3),
+                        inset 0 0 25px rgba(255, 255, 255, 0.5),
+                        0 12px 35px rgba(0, 0, 0, 0.2)
+                      `;
                     e.currentTarget.style.transform = 'translateZ(20px) translateY(-2px)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = `
-                      0 0 30px rgba(0, 255, 136, 0.6),
-                      0 0 60px rgba(0, 255, 136, 0.3),
-                      inset 0 0 20px rgba(255, 255, 255, 0.3),
-                      0 10px 30px rgba(0, 0, 0, 0.5)
-                    `;
+                    e.currentTarget.style.boxShadow = isDark 
+                      ? `
+                        0 0 30px rgba(0, 255, 136, 0.6),
+                        0 0 60px rgba(0, 255, 136, 0.3),
+                        inset 0 0 20px rgba(255, 255, 255, 0.3),
+                        0 10px 30px rgba(0, 0, 0, 0.5)
+                      `
+                      : `
+                        0 0 25px rgba(16, 185, 129, 0.4),
+                        0 0 50px rgba(16, 185, 129, 0.2),
+                        inset 0 0 15px rgba(255, 255, 255, 0.4),
+                        0 8px 25px rgba(0, 0, 0, 0.15)
+                      `;
                     e.currentTarget.style.transform = 'translateZ(10px)';
                   }}
                 >

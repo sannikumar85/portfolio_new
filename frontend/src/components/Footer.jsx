@@ -50,9 +50,9 @@ const Footer = () => {
           }}></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         {/* Social Icons */}
-        <div className="flex justify-center gap-6 mb-12">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-12">
           {socialLinks.map((social, index) => {
             const Icon = social.icon;
             return (
@@ -64,7 +64,7 @@ const Footer = () => {
                 className="group relative"
                 aria-label={social.label}
               >
-                <div className="relative w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 transform group-hover:scale-110 group-hover:-translate-y-1"
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-300 transform group-hover:scale-110 group-hover:-translate-y-1"
                   style={{
                     background: isDark 
                       ? 'rgba(0, 255, 136, 0.08)' 
@@ -74,10 +74,10 @@ const Footer = () => {
                       ? '0 4px 20px rgba(0, 255, 136, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05)' 
                       : '0 4px 20px rgba(251, 146, 60, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                   }}>
-                  <Icon className={`${isDark ? 'text-neon-green' : 'text-orange-500'} transition-all duration-300`} size={24} />
+                  <Icon className={`${isDark ? 'text-neon-green' : 'text-orange-500'} transition-all duration-300`} size={18} />
                   
-                  {/* Hover glow effect */}
-                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  {/* Hover glow effect - hidden on mobile */}
+                  <div className="hidden sm:block absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
                       background: isDark 
                         ? 'radial-gradient(circle at center, rgba(2, 157, 87, 0.3), transparent 70%)' 
@@ -92,14 +92,14 @@ const Footer = () => {
         </div>
 
         {/* Platform Links */}
-        <div className="flex flex-wrap justify-center gap-4 mb-10">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-10">
           {platformLinks.map((link, index) => (
             <a
               key={index}
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative px-6 py-2.5 rounded-lg transition-all duration-300 transform hover:scale-105"
+              className="group relative px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-2.5 rounded-md sm:rounded-lg transition-all duration-300 transform hover:scale-105"
               style={{
                 background: isDark 
                   ? 'rgba(0, 255, 136, 0.05)' 
@@ -108,12 +108,12 @@ const Footer = () => {
                 fontFamily: 'Inter, sans-serif'
               }}
             >
-              <span className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium text-sm transition-colors duration-300 group-hover:${isDark ? 'text-neon-green' : 'text-orange-500'}`}>
+              <span className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium text-xs sm:text-sm transition-colors duration-300`}>
                 {link.label}
               </span>
               
-              {/* Animated border on hover */}
-              <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+              {/* Animated border on hover - hidden on mobile */}
+              <div className="hidden sm:block absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
                 style={{
                   background: isDark 
                     ? 'linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(34, 211, 238, 0.05))' 

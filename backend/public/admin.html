@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: { 
+                    colors: {
+                        primary: {
+                            50: '#ecfdf5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    } 
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <!-- Login Form -->
+    <div id="loginForm" class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+                    Admin Dashboard
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Sign in to access your messages
+                </p>
+            </div>
+            <form class="mt-8 space-y-6" onsubmit="handleLogin(event)">
+                <div class="rounded-md shadow-sm -space-y-px">
+                    <div>
+                        <input id="email" name="email" type="email" required
+                               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                               placeholder="Email address" value="sannikumargupta43@gmail.com">
+                    </div>
+                    <div>
+                        <input id="password" name="password" type="password" required
+                               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                               placeholder="Password">
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        Sign in
+                    </button>
+                </div>
+            </form>
+            <div id="loginError" class="hidden mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden min-h-screen bg-gray-100 dark:bg-gray-900">
+        <!-- Header -->
+        <header class="bg-white dark:bg-gray-800 shadow">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-6">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        Admin Dashboard
+                    </h1>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-600 dark:text-gray-400" id="adminEmail"></span>
+                        <button onclick="handleLogout()" 
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Messages</p>
+                            <p class="text-2xl font-semibold text-gray-900 dark:text-white" id="totalMessages">0</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-red-100 dark:bg-red-900">
+                            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7H4l5-5 5 5H9z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Unread</p>
+                            <p class="text-2xl font-semibold text-gray-900 dark:text-white" id="unreadMessages">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
+                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Today</p>
+                            <p class="text-2xl font-semibold text-gray-900 dark:text-white" id="todayMessages">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
+                            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">This Week</p>
+                            <p class="text-2xl font-semibold text-gray-900 dark:text-white" id="weekMessages">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages List -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Recent Messages</h2>
+                </div>
+                <div id="messagesList" class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <!-- Messages will be loaded here -->
+                </div>
+                
+                <!-- Pagination -->
+                <div id="pagination" class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+        let currentToken = localStorage.getItem('adminToken');
+        let currentPage = 1;
+
+        // Check if user is already logged in
+        if (currentToken) {
+            showDashboard();
+            loadDashboard();
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentToken = data.token;
+                    localStorage.setItem('adminToken', currentToken);
+                    document.getElementById('adminEmail').textContent = data.admin.email;
+                    showDashboard();
+                    loadDashboard();
+                } else {
+                    showError(data.message);
+                }
+            } catch (error) {
+                showError('Network error. Please try again.');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('adminToken');
+            currentToken = null;
+            showLogin();
+        }
+
+        function showLogin() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        async function loadDashboard() {
+            await loadStats();
+            await loadMessages();
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('totalMessages').textContent = data.stats.total;
+                    document.getElementById('unreadMessages').textContent = data.stats.unread;
+                    document.getElementById('todayMessages').textContent = data.stats.today;
+                    document.getElementById('weekMessages').textContent = data.stats.thisWeek;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadMessages(page = 1) {
+            try {
+                const response = await fetch(`${API_BASE}/admin/messages?page=${page}&limit=10`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    renderMessages(data.messages);
+                    renderPagination(data.pagination);
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+
+        function renderMessages(messages) {
+            const container = document.getElementById('messagesList');
+            
+            if (messages.length === 0) {
+                container.innerHTML = '<div class="p-6 text-center text-gray-500 dark:text-gray-400">No messages found</div>';
+                return;
+            }
+
+            container.innerHTML = messages.map(message => `
+                <div class="p-6 ${!message.read_status ? 'bg-blue-50 dark:bg-blue-900/20' : ''}">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${escapeHtml(message.name)}</h3>
+                                ${!message.read_status ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">New</span>' : ''}
+                            </div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                <span>${escapeHtml(message.email)}</span>
+                                ${message.mobile ? `• <span>${escapeHtml(message.mobile)}</span>` : ''}
+                                • <span>${new Date(message.created_at).toLocaleString()}</span>
+                            </div>
+                            <p class="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">${escapeHtml(message.message)}</p>
+                        </div>
+                        <div class="flex space-x-2 ml-4">
+                            ${!message.read_status ? `
+                                <button onclick="markAsRead(${message.id})" 
+                                        class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                                    Mark Read
+                                </button>
+                            ` : ''}
+                            <button onclick="deleteMessage(${message.id})" 
+                                    class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+            
+            if (pagination.totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const pages = [];
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                pages.push(`
+                    <button onclick="loadMessages(${i})" 
+                            class="px-3 py-2 text-sm font-medium ${i === pagination.currentPage 
+                                ? 'bg-primary-600 text-white' 
+                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} 
+                            rounded-md">
+                        ${i}
+                    </button>
+                `);
+            }
+
+            container.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <div class="text-sm text-gray-700 dark:text-gray-300">
+                        Showing ${(pagination.currentPage - 1) * pagination.limit + 1} to 
+                        ${Math.min(pagination.currentPage * pagination.limit, pagination.totalMessages)} of 
+                        ${pagination.totalMessages} results
+                    </div>
+                    <div class="flex space-x-1">
+                        ${pages.join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function markAsRead(messageId) {
+            try {
+                const response = await fetch(`${API_BASE}/admin/messages/${messageId}/read`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    loadDashboard(); // Refresh dashboard
+                }
+            } catch (error) {
+                console.error('Error marking message as read:', error);
+            }
+        }
+
+        async function deleteMessage(messageId) {
+            if (!confirm('Are you sure you want to delete this message?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/messages/${messageId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    loadDashboard(); // Refresh dashboard
+                }
+            } catch (error) {
+                console.error('Error deleting message:', error);
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
+</body>
+</html>

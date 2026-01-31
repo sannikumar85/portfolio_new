@@ -41,7 +41,7 @@ const Services = () => {
         { Icon: SiTailwindcss, name: 'Tailwind', color: '#06B6D4' },
         { Icon: SiBootstrap, name: 'Bootstrap', color: '#7952B3' },
       ],
-      description: 'Building responsive and modern web applications using latest frontend technologies.',
+      description: 'Building responsive web applications using modern frontend technologies.',
       features: ['Responsive Design', 'Modern UI/UX', 'Performance Optimized', 'Cross-Browser Compatible'],
       color: isDark ? '#00ff88' : '#10b981',
       borderGlow: isDark ? 'rgba(0, 255, 136, 0.3)' : 'rgba(16, 185, 129, 0.2)',
@@ -67,7 +67,7 @@ const Services = () => {
         { Icon: SiAdobephotoshop, name: 'Photoshop', color: '#31A8FF' },
         { Icon: SiCanva, name: 'Canva', color: '#00C4CC' },
       ],
-      description: 'Designing intuitive and beautiful user interfaces with focus on user experience.',
+      description: 'Creating intuitive user interfaces with focus on user experience.',
       features: ['User Research', 'Wireframing', 'Prototyping', 'Design Systems'],
       color: isDark ? '#50C878' : '#22c55e',
       borderGlow: isDark ? 'rgba(80, 200, 120, 0.3)' : 'rgba(34, 197, 94, 0.2)',
@@ -95,7 +95,7 @@ const Services = () => {
         { Icon: SiReact, name: 'React', color: '#61DAFB' },
         { Icon: SiNodedotjs, name: 'Node.js', color: '#339933' },
       ],
-      description: 'End-to-end development of complete applications from database to frontend.',
+      description: 'Complete application development from database to frontend.',
       features: ['Full MERN Stack', 'API Development', 'State Management', 'Deployment'],
       color: isDark ? '#39ff14' : '#84cc16',
       borderGlow: isDark ? 'rgba(57, 255, 20, 0.3)' : 'rgba(132, 204, 22, 0.2)',
@@ -109,7 +109,7 @@ const Services = () => {
         { Icon: SiCanva, name: 'Canva', color: '#00C4CC' },
         { Icon: SiAdobepremierepro, name: 'Premiere', color: '#9999FF' },
       ],
-      description: 'Professional photo and video editing services for creative content.',
+      description: 'Photo and video editing services for creative projects.',
       features: ['Color Grading', 'Photo Retouching', 'Video Editing', 'Motion Graphics'],
       color: isDark ? '#50C878' : '#22c55e',
       borderGlow: isDark ? 'rgba(80, 200, 120, 0.3)' : 'rgba(34, 197, 94, 0.2)',
@@ -156,17 +156,6 @@ const Services = () => {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}
         >
-          <span className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold mb-8 ${
-            isDark 
-              ? 'bg-gradient-to-r from-neon-green/20 to-emerald-500/20 text-neon-green border border-neon-green/30' 
-              : 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-600 border border-green-200'
-          }`}>
-            <span className="relative flex h-2 w-2">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isDark ? 'bg-neon-green' : 'bg-green-500'}`}></span>
-              <span className={`relative inline-flex rounded-full h-2 w-2 ${isDark ? 'bg-neon-green' : 'bg-green-500'}`}></span>
-            </span>
-            What I Offer
-          </span>
           
           <h2 className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-8 px-4 ${isDark ? 'text-white' : 'text-gray-800'}`}
             style={{
@@ -198,16 +187,12 @@ const Services = () => {
               lineHeight: '1.6'
             }}
           >
-            Providing comprehensive development solutions tailored to your needs
+            Skills and expertise in modern web development
           </p>
           
           {/* Decorative line */}
           <div className="flex items-center justify-center gap-2 mt-8">
-            <div className={`w-12 h-1 rounded-full ${isDark ? 'bg-gradient-to-r from-transparent to-white/80' : 'bg-gradient-to-r from-transparent to-gray-400'}`}></div>
-            <div className={`w-4 h-4 rounded-full animate-pulse ${isDark ? 'bg-white/80' : 'bg-gray-400'}`}></div>
             <div className={`w-32 h-1 rounded-full ${isDark ? 'bg-white/80' : 'bg-gray-400'}`}></div>
-            <div className={`w-4 h-4 rounded-full animate-pulse ${isDark ? 'bg-white/80' : 'bg-gray-400'}`} style={{ animationDelay: '0.5s' }}></div>
-            <div className={`w-12 h-1 rounded-full ${isDark ? 'bg-gradient-to-r from-white/80 to-transparent' : 'bg-gradient-to-r from-gray-400 to-transparent'}`}></div>
           </div>
         </div>
 
@@ -566,19 +551,7 @@ const Services = () => {
                     </div>
 
                     {/* Hover to flip back indicator */}
-                    <div className="mt-4 text-center">
-                      <div 
-                        className={`inline-block px-4 py-2 rounded-lg text-xs font-bold ${
-                          isDark ? 'bg-gray-800/50 text-gray-400' : 'bg-gray-100 text-gray-600'
-                        }`}
-                        style={{
-                          fontFamily: 'Rajdhani, sans-serif',
-                          letterSpacing: '1px'
-                        }}
-                      >
-                        Hover to flip back
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               </div>

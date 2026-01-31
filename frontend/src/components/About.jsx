@@ -1,14 +1,25 @@
-import { useState, useEffect, useRef } from 'react';
-import { FiDownload, FiCode, FiCpu, FiMail, FiPhone, FiMapPin, FiUser, FiArrowRight, FiStar, FiZap, FiAward, FiBookOpen } from 'react-icons/fi';
-import { SiPython, SiHtml5, SiCss3, SiJavascript, SiReact, SiTailwindcss, SiExpress, SiNodedotjs, SiBootstrap, SiMongodb, SiGit, SiGithub, SiAdobephotoshop } from 'react-icons/si';
+import { useState, useEffect, useRef, memo } from 'react';
+import { FiDownload, FiCode, FiCpu, FiMail, FiPhone, FiMapPin, FiUser, FiArrowRight, FiStar, FiZap, FiAward, FiBookOpen, FiVideo } from 'react-icons/fi';
+import { SiPython, SiHtml5, SiCss3, SiJavascript, SiReact, SiTailwindcss, SiExpress, SiNodedotjs, SiBootstrap, SiMongodb, SiGit, SiGithub, SiAdobephotoshop, SiC, SiJquery, SiSocketdotio, SiJsonwebtokens, SiMysql, SiFlutter, SiDart, SiPostman, SiNpm } from 'react-icons/si';
 import { DiJava } from 'react-icons/di';
 import { VscVscode } from 'react-icons/vsc';
 import { useTheme } from '../context/ThemeContext';
 
-const About = () => {
+const About = memo(() => {
   const { isDark } = useTheme();
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true); // Default true for mobile compatibility
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef(null);
+
+  // Detect mobile device for performance optimization
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -27,95 +38,49 @@ const About = () => {
     return () => observer.disconnect();
   }, []);
 
-  // 360 rotating gallery images
-  const galleryImages = [
-    '/images/sanni1.jpg',
-    '/images/sanni2.jpg',
-    '/images/sanni3.jpg',
-    '/images/sanni4.jpg',
-    '/images/sanni5.jpg',
-    '/images/sanni6.jpg',
-    '/images/sanni7.jpg',
-    '/images/sanni8.jpg',
-  ];
-
-  const [rotation, setRotation] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [hoveredSkill, setHoveredSkill] = useState(null);
-  const [galleryRadius, setGalleryRadius] = useState(200);
-  const containerRef = useRef(null);
-
-  // Handle responsive gallery radius
-  useEffect(() => {
-    const updateRadius = () => {
-      if (typeof window !== 'undefined') {
-        if (window.innerWidth < 480) {
-          setGalleryRadius(120);
-        } else if (window.innerWidth < 640) {
-          setGalleryRadius(140);
-        } else if (window.innerWidth < 768) {
-          setGalleryRadius(160);
-        } else {
-          setGalleryRadius(200);
-        }
-      }
-    };
-    updateRadius();
-    window.addEventListener('resize', updateRadius);
-    return () => window.removeEventListener('resize', updateRadius);
-  }, []);
-
-  // Auto rotation
-  useEffect(() => {
-    if (!isDragging) {
-      const interval = setInterval(() => {
-        setRotation(prev => prev + 0.3);
-      }, 30);
-      return () => clearInterval(interval);
-    }
-  }, [isDragging]);
-
-  // Mouse/Touch handlers for manual rotation
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.clientX || e.touches?.[0]?.clientX);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const currentX = e.clientX || e.touches?.[0]?.clientX;
-    const diff = currentX - startX;
-    setRotation(prev => prev + diff * 0.5);
-    setStartX(currentX);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
   const languages = [
+    { icon: SiC, name: 'C', color: '#A8B9CC' },
     { icon: DiJava, name: 'Java', color: '#f89820' },
     { icon: SiPython, name: 'Python', color: '#3776ab' },
+    { icon: SiJavascript, name: 'JavaScript', color: '#f7df1e' },
     { icon: SiHtml5, name: 'HTML5', color: '#e34f26' },
     { icon: SiCss3, name: 'CSS3', color: '#1572b6' },
-    { icon: SiJavascript, name: 'JavaScript', color: '#f7df1e' },
   ];
 
-  const frameworks = [
-    { icon: SiReact, name: 'React', color: '#61dafb' },
-    { icon: SiTailwindcss, name: 'Tailwind', color: '#06b6d4' },
-    { icon: SiExpress, name: 'Express', color: isDark ? '#ffffff' : '#333333' },
-    { icon: SiNodedotjs, name: 'Node.js', color: '#339933' },
+  const frontend = [
+    { icon: SiReact, name: 'React.js', color: '#61dafb' },
     { icon: SiBootstrap, name: 'Bootstrap', color: '#7952b3' },
+    { icon: SiJquery, name: 'jQuery', color: '#0769AD' },
+    { icon: SiTailwindcss, name: 'Tailwind CSS', color: '#06b6d4' },
+    { icon: SiCss3, name: 'Responsive Design', color: '#1572b6' },
+  ];
+
+  const backend = [
+    { icon: SiNodedotjs, name: 'Node.js', color: '#339933' },
+    { icon: SiExpress, name: 'Express.js', color: isDark ? '#ffffff' : '#333333' },
+    { icon: FiZap, name: 'RESTful APIs', color: '#61dafb' },
+    { icon: SiSocketdotio, name: 'Socket.io', color: '#010101' },
+    { icon: FiVideo, name: 'WebRTC', color: '#333333' },
+    { icon: SiJsonwebtokens, name: 'JWT Auth', color: '#000000' },
+  ];
+
+  const databases = [
+    { icon: SiMongodb, name: 'MongoDB', color: '#47a248' },
+    { icon: SiMysql, name: 'MySQL', color: '#4479A1' },
+  ];
+
+  const mobile = [
+    { icon: SiFlutter, name: 'Flutter', color: '#02569B' },
+    { icon: SiDart, name: 'Dart', color: '#0175C2' },
   ];
 
   const tools = [
-    { icon: SiMongodb, name: 'MongoDB', color: '#47a248' },
     { icon: SiGit, name: 'Git', color: '#f05032' },
     { icon: SiGithub, name: 'GitHub', color: isDark ? '#ffffff' : '#333333' },
+    { icon: SiPostman, name: 'Postman', color: '#FF6C37' },
     { icon: VscVscode, name: 'VS Code', color: '#007acc' },
-    { icon: SiAdobephotoshop, name: 'Photoshop', color: '#31a8ff' },
+    { icon: SiNpm, name: 'npm', color: '#CB3837' },
+    { icon: FiZap, name: 'WebSockets', color: '#8DD6F9' },
   ];
 
   const qualifications = [
@@ -127,14 +92,14 @@ const About = () => {
       type: 'education'
     },
     {
-      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=150',
+      image: '/images/profile1.jpeg',
       title: '10th Grade - Bihar Board',
       description: 'I completed my 10th from Bihar Board with 88%. I worked hard to achieve a strong academic score. This milestone helped build my educational foundation.',
       position: 'right',
       type: 'education'
     },
     {
-      image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=150',
+      image: '/images/sanni1.jpg',
       title: '12th Grade - Bihar Board (ISC)',
       description: 'I completed my 12th from Bihar Board (ISC) with 80%. I focused on academics and worked hard to achieve this score. This helped me build a strong base for my higher studies.',
       position: 'left',
@@ -148,33 +113,33 @@ const About = () => {
       type: 'education'
     },
     {
-      image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=150',
+      image: '/images/sanni-pro.jpg',
       title: 'MERN Stack Developer',
-      description: 'I am a passionate MERN Stack Developer with experience in building full-stack web applications using MongoDB, Express.js, React, and Node.js. I create scalable and efficient solutions.',
+      description: 'I develop full-stack web applications using MongoDB, Express.js, React, and Node.js. I focus on building scalable and efficient solutions.',
       position: 'left',
       type: 'skill',
       icon: '🚀'
     },
     {
-      image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=150',
+      image: '/images/sanni2.jpg',
       title: 'App Developer',
-      description: 'I have experience in mobile app development using Flutter and React Native, creating cross-platform applications. I build intuitive and performant mobile experiences.',
+      description: 'I build mobile applications using Flutter and React Native for cross-platform development. I create intuitive user experiences.',
       position: 'right',
       type: 'skill',
       icon: '📱'
     },
     {
-      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=150',
+      image: '/images/sanni3.jpg',
       title: 'Full Stack Development',
-      description: 'As a Full Stack Developer, I work on both frontend and backend technologies, delivering complete web solutions. I handle everything from database design to UI/UX implementation.',
+      description: 'I work with both frontend and backend technologies to deliver complete web solutions, from database design to user interface.',
       position: 'left',
       type: 'skill',
       icon: '💻'
     },
     {
-      image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=150',
+      image: '/images/sanni4.jpg',
       title: 'Sports Enthusiast',
-      description: 'I am passionate about sports and actively play cricket, kabaddi, kho-kho, football, volleyball, and badminton. Engaging in multiple sports keeps me physically fit and enhances my teamwork and strategy skills.',
+      description: 'I enjoy playing various sports including cricket, kabaddi, kho-kho, football, volleyball, and badminton. Sports help me stay active and develop teamwork skills.',
       position: 'right',
       type: 'sports',
       icon: '⚽'
@@ -232,49 +197,47 @@ const About = () => {
         minHeight: '100vh'
       }}
     >
-      {/* Animated Background Elements */}
+      {/* Animated Background Elements - Simplified on mobile for performance */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className={`absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl animate-morph ${isDark ? 'bg-neon-green/10' : 'bg-green-400/20'}`}></div>
-        <div className={`absolute bottom-20 left-20 w-80 h-80 rounded-full blur-3xl animate-morph ${isDark ? 'bg-emerald-500/10' : 'bg-emerald-300/20'}`} style={{ animationDelay: '-4s' }}></div>
-        <div className={`absolute top-1/2 right-1/4 w-64 h-64 rounded-full blur-3xl animate-morph ${isDark ? 'bg-lime-400/10' : 'bg-lime-300/20'}`} style={{ animationDelay: '-8s' }}></div>
+        {!isMobile && (
+          <>
+            <div className={`absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl animate-morph ${isDark ? 'bg-neon-green/10' : 'bg-green-400/20'}`}></div>
+            <div className={`absolute bottom-20 left-20 w-80 h-80 rounded-full blur-3xl animate-morph ${isDark ? 'bg-emerald-500/10' : 'bg-emerald-300/20'}`} style={{ animationDelay: '-4s' }}></div>
+            <div className={`absolute top-1/2 right-1/4 w-64 h-64 rounded-full blur-3xl animate-morph ${isDark ? 'bg-lime-400/10' : 'bg-lime-300/20'}`} style={{ animationDelay: '-8s' }}></div>
+            
+            {/* Floating particles */}
+            <div className={`absolute top-40 left-40 w-2 h-2 rounded-full animate-float ${isDark ? 'bg-neon-green/60' : 'bg-green-500/60'}`}></div>
+            <div className={`absolute bottom-40 right-40 w-3 h-3 rounded-full animate-float-delayed ${isDark ? 'bg-emerald-400/60' : 'bg-emerald-500/60'}`}></div>
+            <div className={`absolute top-1/3 right-1/3 w-2 h-2 rounded-full animate-float ${isDark ? 'bg-lime-400/60' : 'bg-lime-500/60'}`} style={{ animationDelay: '-2s' }}></div>
+          </>
+        )}
         
-        {/* Floating particles */}
-        <div className={`absolute top-40 left-40 w-2 h-2 rounded-full animate-float ${isDark ? 'bg-neon-green/60' : 'bg-green-500/60'}`}></div>
-        <div className={`absolute bottom-40 right-40 w-3 h-3 rounded-full animate-float-delayed ${isDark ? 'bg-emerald-400/60' : 'bg-emerald-500/60'}`}></div>
-        <div className={`absolute top-1/3 right-1/3 w-2 h-2 rounded-full animate-float ${isDark ? 'bg-lime-400/60' : 'bg-lime-500/60'}`} style={{ animationDelay: '-2s' }}></div>
-        
-        {/* Grid pattern */}
+        {/* Grid pattern - lighter on mobile */}
         <div 
-          className={`absolute inset-0 ${isDark ? 'opacity-5' : 'opacity-[0.03]'}`}
+          className={`absolute inset-0 ${isDark ? (isMobile ? 'opacity-[0.02]' : 'opacity-5') : (isMobile ? 'opacity-[0.01]' : 'opacity-[0.03]')}`}
           style={{
             backgroundImage: `radial-gradient(${isDark ? '#00ff88' : '#10b981'} 1px, transparent 1px)`,
-            backgroundSize: '40px 40px'
+            backgroundSize: isMobile ? '60px 60px' : '40px 40px'
           }}
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         {/* Section Header */}
-        <div className={`text-center mb-20 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className={`inline-flex items-center gap-3 px-6 py-3 rounded-full text-sm font-bold mb-8 backdrop-blur-xl shadow-2xl transform hover:scale-105 transition-all duration-300 ${
+        <div className={`text-center mb-10 sm:mb-16 md:mb-20 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-8 ${
             isDark 
-              ? 'bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-orange-500/20 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 border-2 border-purple-400/30' 
-              : 'bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 border-2 border-purple-300'
-          }`}
-            style={{ fontFamily: "'Poppins', sans-serif" }}>
-            <span className="relative flex h-3 w-3">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isDark ? 'bg-purple-400' : 'bg-purple-500'}`}></span>
-              <span className={`relative inline-flex rounded-full h-3 w-3 ${isDark ? 'bg-gradient-to-r from-purple-400 to-pink-400' : 'bg-gradient-to-r from-purple-500 to-pink-500'}`}></span>
-            </span>
-            <span className={isDark ? 'text-purple-300' : 'text-purple-600'} style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700 }}>Get to Know Me</span>
-            <FiStar className={isDark ? 'text-orange-400' : 'text-orange-500'} />
+              ? 'bg-purple-500/20 text-purple-300 border border-purple-400/30' 
+              : 'bg-purple-100 text-purple-600 border border-purple-200'
+          }`}>
+            About Me
           </span>
           
-          <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-8 px-4"
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 sm:mb-8 px-2 sm:px-4"
             style={{
               fontFamily: "'Montserrat', 'Bebas Neue', sans-serif",
-              letterSpacing: '6px',
-              lineHeight: '1.1',
+              letterSpacing: isMobile ? '2px' : '6px',
+              lineHeight: '1.2',
               background: isDark
                 ? 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)'
                 : 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #667eea 100%)',
@@ -282,11 +245,11 @@ const About = () => {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               textShadow: 'none',
-              filter: isDark 
+              filter: isMobile ? 'none' : (isDark 
                 ? 'drop-shadow(0 0 40px rgba(102, 126, 234, 0.3)) drop-shadow(0 0 80px rgba(118, 75, 162, 0.2))' 
-                : 'drop-shadow(0 0 30px rgba(102, 126, 234, 0.2))',
+                : 'drop-shadow(0 0 30px rgba(102, 126, 234, 0.2))'),
               backgroundSize: '200% 200%',
-              animation: 'gradient-shift 8s ease infinite'
+              animation: isMobile ? 'none' : 'gradient-shift 8s ease infinite'
             }}
           >
             About Me
@@ -299,136 +262,43 @@ const About = () => {
               lineHeight: '1.8'
             }}
           >
-            Get to know more about my journey, skills, and qualifications ✨
+            Get to know more about my journey, skills, and qualifications 
           </p>
           
-          {/* Decorative line */}
-          <div className="flex items-center justify-center gap-3 mt-8">
-            <div className={`w-16 h-1 rounded-full ${isDark ? 'bg-gradient-to-r from-transparent via-purple-500 to-pink-500' : 'bg-gradient-to-r from-transparent via-purple-400 to-pink-400'}`}></div>
-            <div className={`w-5 h-5 rounded-full animate-pulse ${isDark ? 'bg-gradient-to-br from-purple-400 to-pink-500' : 'bg-gradient-to-br from-purple-500 to-pink-600'}`} style={{ boxShadow: isDark ? '0 0 20px rgba(168, 85, 247, 0.5)' : '0 0 20px rgba(147, 51, 234, 0.4)' }}></div>
-            <div className={`w-40 h-1.5 rounded-full ${isDark ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500' : 'bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400'}`}></div>
-            <div className={`w-5 h-5 rounded-full animate-pulse ${isDark ? 'bg-gradient-to-br from-pink-400 to-orange-500' : 'bg-gradient-to-br from-pink-500 to-orange-600'}`} style={{ animationDelay: '0.5s', boxShadow: isDark ? '0 0 20px rgba(236, 72, 153, 0.5)' : '0 0 20px rgba(219, 39, 119, 0.4)' }}></div>
-            <div className={`w-16 h-1 rounded-full ${isDark ? 'bg-gradient-to-r from-orange-500 via-pink-500 to-transparent' : 'bg-gradient-to-r from-orange-400 via-pink-400 to-transparent'}`}></div>
+          {/* Decorative line - simplified on mobile */}
+          <div className={`flex items-center justify-center gap-2 sm:gap-3 mt-4 sm:mt-8 ${isMobile ? 'scale-75' : ''}`}>
+            <div className={`w-8 sm:w-16 h-1 rounded-full ${isDark ? 'bg-gradient-to-r from-transparent via-purple-500 to-pink-500' : 'bg-gradient-to-r from-transparent via-purple-400 to-pink-400'}`}></div>
+            <div className={`w-3 h-3 sm:w-5 sm:h-5 rounded-full ${isMobile ? '' : 'animate-pulse'} ${isDark ? 'bg-gradient-to-br from-purple-400 to-pink-500' : 'bg-gradient-to-br from-purple-500 to-pink-600'}`} style={{ boxShadow: isDark ? '0 0 20px rgba(168, 85, 247, 0.5)' : '0 0 20px rgba(147, 51, 234, 0.4)' }}></div>
+            <div className={`w-20 sm:w-40 h-1 sm:h-1.5 rounded-full ${isDark ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500' : 'bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400'}`}></div>
+            <div className={`w-3 h-3 sm:w-5 sm:h-5 rounded-full ${isMobile ? '' : 'animate-pulse'} ${isDark ? 'bg-gradient-to-br from-pink-400 to-orange-500' : 'bg-gradient-to-br from-pink-500 to-orange-600'}`} style={{ animationDelay: '0.5s', boxShadow: isDark ? '0 0 20px rgba(236, 72, 153, 0.5)' : '0 0 20px rgba(219, 39, 119, 0.4)' }}></div>
+            <div className={`w-8 sm:w-16 h-1 rounded-full ${isDark ? 'bg-gradient-to-r from-orange-500 via-pink-500 to-transparent' : 'bg-gradient-to-r from-orange-400 via-pink-400 to-transparent'}`}></div>
           </div>
         </div>
 
         {/* About Content - Profile and Info */}
-        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-start mb-24 px-4 sm:px-0 transition-all duration-700 delay-150 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-20 items-start mb-16 sm:mb-24 px-2 sm:px-4 transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
 
-          {/* Left Side - Profile Image with Oval Shape and 3D Animation */}
-          <div className="flex justify-center items-center px-4 sm:px-0">
-            <div className="relative group w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px]" style={{ perspective: '1000px' }}>
-              {/* Main container - responsive sizes */}
-              <div 
-                className="relative w-full aspect-[4/5] mx-auto transition-transform duration-500"
-                style={{
-                  transformStyle: 'preserve-3d',
-                  transform: 'rotateX(0deg) rotateY(0deg)',
-                  maxWidth: '300px'
-                }}
-                onMouseMove={(e) => {
-                  if (window.innerWidth >= 768) { // Only on desktop
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    const rotateX = (y - centerY) / 25;
-                    const rotateY = (centerX - x) / 25;
-                    e.currentTarget.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'rotateX(0deg) rotateY(0deg)';
-                }}
-              >
-                
-                {/* Blue glowing oval aura - behind image */}
-                <div 
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] h-[92%] pointer-events-none"
-                  style={{
-                    borderRadius: '50%',
-                    background: 'transparent',
-                    border: '3px solid rgba(0, 200, 255, 0.8)',
-                    boxShadow: `
-                      0 0 25px rgba(0, 200, 255, 0.7),
-                      0 0 50px rgba(0, 180, 255, 0.5),
-                      0 0 75px rgba(0, 160, 255, 0.35),
-                      0 0 100px rgba(0, 140, 255, 0.25),
-                      inset 0 0 30px rgba(0, 200, 255, 0.15)
-                    `,
-                    animation: 'pulse 3s ease-in-out infinite',
-                    transform: 'translateZ(-20px)',
-                  }}
-                ></div>
-
-                {/* Secondary inner glow oval */}
-                <div 
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[84%] h-[84%] pointer-events-none"
-                  style={{
-                    borderRadius: '50%',
-                    background: 'transparent',
-                    border: '1.5px solid rgba(0, 255, 255, 0.4)',
-                    boxShadow: '0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 200, 255, 0.1)',
-                    transform: 'translateZ(-15px)',
-                  }}
-                ></div>
-
-                {/* Outer subtle oval */}
-                <div 
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] pointer-events-none"
-                  style={{
-                    borderRadius: '50%',
-                    background: 'transparent',
-                    border: '1px solid rgba(0, 180, 255, 0.25)',
-                    boxShadow: '0 0 40px rgba(0, 150, 255, 0.15)',
-                    transform: 'translateZ(-25px)',
-                  }}
-                ></div>
-
-                {/* Profile Image Container - Oval shape */}
-                <div 
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] h-[75%] overflow-hidden transition-all duration-500 group-hover:shadow-2xl"
-                  style={{
-                    borderRadius: '50%',
-                    boxShadow: isDark 
-                      ? '0 0 40px rgba(0, 200, 255, 0.3), 0 20px 40px rgba(0, 0, 0, 0.5)'
-                      : '0 0 30px rgba(0, 150, 255, 0.25), 0 20px 40px rgba(0, 0, 0, 0.3)',
-                    border: '3px solid rgba(0, 180, 255, 0.3)',
-                    transform: 'translateZ(10px)',
-                  }}
-                >
+          {/* Left Side - Clean Professional Image */}
+          <div className="flex justify-center items-center px-2 sm:px-4">
+            <div className="relative group w-full max-w-[300px] sm:max-w-[340px] md:max-w-[380px] lg:max-w-[420px]">
+              {/* Simple image container - no extra design elements */}
+              <div className="relative">
+                <div className="relative w-full aspect-[4/5] transition-all duration-500 group-hover:scale-[1.02]">
                   <img
-                    src="/images/sanni-pro.jpg"
-                    alt="Sanni Kumar Gupta"
-                    className="w-full h-full object-cover object-center"
+                    src="https://i.ibb.co/YdQk2Vn/sticker.png"
+                    alt="Sanni Kumar Gupta - Full Stack Developer"
+                    className="w-full h-full object-contain object-center transition-all duration-700 group-hover:scale-105"
+                    style={{ 
+                      filter: 'contrast(1.05) brightness(1.02) saturate(1.05)'
+                    }}
                     onError={(e) => {
-                      e.target.src = 'https://sanniportfolio8579.netlify.app/assets/sanni3-mWkZ6tBl.jpg';
+                      e.target.src = '/images/sticker.png';
                     }}
                   />
-                  
-                  {/* Rim light glow effect overlay */}
-                  <div 
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      borderRadius: '50%',
-                      background: `
-                        linear-gradient(90deg, rgba(0, 180, 255, 0.2) 0%, transparent 20%, transparent 80%, rgba(0, 180, 255, 0.2) 100%),
-                        linear-gradient(180deg, rgba(0, 150, 255, 0.15) 0%, transparent 25%, transparent 100%)
-                      `,
-                    }}
-                  ></div>
                 </div>
-
-                {/* Floating particles */}
-                <div className="absolute top-[5%] right-[10%] w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse opacity-60"></div>
-                <div className="absolute top-[15%] left-[5%] w-1 h-1 rounded-full bg-blue-400 animate-ping opacity-40" style={{ animationDelay: '1s' }}></div>
-                <div className="absolute bottom-[20%] right-[5%] w-1 h-1 rounded-full bg-cyan-300 animate-pulse opacity-50" style={{ animationDelay: '0.5s' }}></div>
-                <div className="absolute bottom-[30%] left-[8%] w-0.5 h-0.5 rounded-full bg-white animate-ping opacity-40" style={{ animationDelay: '2s' }}></div>
               </div>
             </div>
           </div>
-
           {/* Profile Info */}
           <div className="space-y-6 text-center lg:text-left">
             <h3 className="text-3xl md:text-4xl font-black"
@@ -532,7 +402,7 @@ const About = () => {
 
             {/* Download Resume Button */}
             <a
-              href="https://drive.google.com/file/d/1JJhZf4gy3hqgKWs_6X5lmLZsh3AN-VvW/view?usp=sharing"
+              href="https://drive.google.com/file/d/1BNUN_n9FihhIrD1ArWunY9u2_jPnzY_p/view?usp=drive_link"
               target="_blank"
               rel="noopener noreferrer"
               className="group relative inline-flex items-center gap-3 px-10 py-5 font-bold rounded-2xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-2 shadow-2xl overflow-hidden backdrop-blur-xl border-2"
@@ -590,57 +460,44 @@ const About = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Skills Left Side */}
-            <div className="space-y-10">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            {/* Left Column */}
+            <div className="space-y-8">
               {/* Languages */}
-              <div className={`relative p-8 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-purple-900/30 via-pink-900/20 to-blue-900/30 border-purple-500/30' : 'bg-gradient-to-br from-purple-50/80 via-pink-50/80 to-blue-50/80 border-purple-300 shadow-2xl'}`}>
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <h3 className="relative text-2xl font-black mb-8 flex items-center gap-3"
+              <div className={`relative p-6 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-yellow-900/20 via-amber-900/15 to-orange-900/20 border-yellow-500/30' : 'bg-gradient-to-br from-yellow-50/80 via-amber-50/80 to-orange-50/80 border-yellow-400/40 shadow-xl'}`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-amber-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <h3 className="relative text-xl font-bold mb-6 flex items-center gap-3"
                   style={{
                     fontFamily: "'Raleway', sans-serif",
-                    letterSpacing: '2px',
-                    background: isDark ? 'linear-gradient(135deg, #a78bfa 0%, #ec4899 100%)' : 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
+                    letterSpacing: '1px',
+                    background: isDark ? 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)' : 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text'
                   }}
                 >
-                  <FiCode className={`w-7 h-7 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} />
+                  <FiCode className={`w-6 h-6 ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`} />
                   Languages
                 </h3>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-3">
                   {languages.map((lang, index) => {
                     const IconComponent = lang.icon;
                     return (
                       <div
                         key={index}
-                        className={`group relative p-4 rounded-xl transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 cursor-pointer ${
+                        className={`group relative p-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer ${
                           isDark 
-                            ? 'bg-gray-900/50 hover:bg-gray-900 border border-gray-700/50 hover:border-neon-green/50' 
-                            : 'bg-gray-50 hover:bg-white border border-gray-200 hover:border-green-400 hover:shadow-lg'
+                            ? 'bg-gradient-to-br from-yellow-900/40 to-amber-900/30 hover:from-yellow-800/60 hover:to-amber-800/50 border border-yellow-600/30 hover:border-yellow-400/50' 
+                            : 'bg-gradient-to-br from-yellow-100/80 to-amber-100/80 hover:from-yellow-200 hover:to-amber-200 border border-yellow-300 hover:border-yellow-500 shadow-md hover:shadow-lg'
                         }`}
-                        onMouseEnter={() => setHoveredSkill(lang.name)}
-                        onMouseLeave={() => setHoveredSkill(null)}
-                        style={{
-                          animationDelay: `${index * 100}ms`
-                        }}
+                        style={{ animationDelay: `${index * 50}ms` }}
                       >
-                        {/* Glow effect on hover */}
-                        <div 
-                          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                          style={{ boxShadow: `0 0 30px ${lang.color}30` }}
-                        />
-                        <IconComponent 
-                          className="w-10 h-10 transition-all duration-300 group-hover:scale-110" 
-                          style={{ color: lang.color }}
-                        />
-                        {/* Tooltip */}
-                        <span className={`absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 whitespace-nowrap z-20 ${
-                          isDark ? 'bg-gray-800 text-white' : 'bg-gray-900 text-white'
-                        }`}>
+                        <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                          style={{ boxShadow: `0 0 20px ${isDark ? '#fbbf24' : '#d97706'}20` }} />
+                        <IconComponent className="w-8 h-8 transition-all duration-300 group-hover:scale-110" style={{ color: lang.color }} />
+                        <span className={`absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-30 ${isDark ? 'bg-yellow-800 text-yellow-100 border border-yellow-600' : 'bg-yellow-700 text-white'}`}>
                           {lang.name}
-                          <span className={`absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 ${isDark ? 'bg-gray-800' : 'bg-gray-900'}`}></span>
+                          <span className={`absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${isDark ? 'border-t-yellow-800' : 'border-t-yellow-700'}`}></span>
                         </span>
                       </div>
                     );
@@ -648,49 +505,40 @@ const About = () => {
                 </div>
               </div>
 
-              {/* Frameworks */}
-              <div className={`relative p-8 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-blue-900/30 via-cyan-900/20 to-teal-900/30 border-blue-500/30' : 'bg-gradient-to-br from-blue-50/80 via-cyan-50/80 to-teal-50/80 border-blue-300 shadow-2xl'}`}>
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-cyan-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <h3 className="relative text-2xl font-black mb-8 flex items-center gap-3"
+              {/* Frontend */}
+              <div className={`relative p-6 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-emerald-900/20 via-teal-900/15 to-cyan-900/20 border-emerald-500/30' : 'bg-gradient-to-br from-emerald-50/80 via-teal-50/80 to-cyan-50/80 border-emerald-400/40 shadow-xl'}`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <h3 className="relative text-xl font-bold mb-6 flex items-center gap-3"
                   style={{
                     fontFamily: "'Raleway', sans-serif",
-                    letterSpacing: '2px',
-                    background: isDark ? 'linear-gradient(135deg, #60a5fa 0%, #06b6d4 100%)' : 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
+                    letterSpacing: '1px',
+                    background: isDark ? 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)' : 'linear-gradient(135deg, #059669 0%, #0891b2 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text'
                   }}
                 >
-                  <FiCpu className={`w-7 h-7 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
-                  Frameworks
+                  <FiCpu className={`w-6 h-6 ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`} />
+                  Frontend
                 </h3>
-                <div className="flex flex-wrap gap-4">
-                  {frameworks.map((fw, index) => {
+                <div className="flex flex-wrap gap-3">
+                  {frontend.map((fw, index) => {
                     const IconComponent = fw.icon;
                     return (
                       <div
                         key={index}
-                        className={`group relative p-4 rounded-xl transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 cursor-pointer ${
+                        className={`group relative p-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer ${
                           isDark 
-                            ? 'bg-gray-900/50 hover:bg-gray-900 border border-gray-700/50 hover:border-emerald-500/50' 
-                            : 'bg-gray-50 hover:bg-white border border-gray-200 hover:border-emerald-400 hover:shadow-lg'
+                            ? 'bg-gradient-to-br from-emerald-900/40 to-teal-900/30 hover:from-emerald-800/60 hover:to-teal-800/50 border border-emerald-600/30 hover:border-emerald-400/50' 
+                            : 'bg-gradient-to-br from-emerald-100/80 to-teal-100/80 hover:from-emerald-200 hover:to-teal-200 border border-emerald-300 hover:border-emerald-500 shadow-md hover:shadow-lg'
                         }`}
-                        onMouseEnter={() => setHoveredSkill(fw.name)}
-                        onMouseLeave={() => setHoveredSkill(null)}
                       >
-                        <div 
-                          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                          style={{ boxShadow: `0 0 30px ${fw.color}30` }}
-                        />
-                        <IconComponent 
-                          className="w-10 h-10 transition-all duration-300 group-hover:scale-110" 
-                          style={{ color: fw.color }}
-                        />
-                        <span className={`absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 whitespace-nowrap z-20 ${
-                          isDark ? 'bg-gray-800 text-white' : 'bg-gray-900 text-white'
-                        }`}>
+                        <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                          style={{ boxShadow: `0 0 20px ${isDark ? '#10b981' : '#059669'}20` }} />
+                        <IconComponent className="w-8 h-8 transition-all duration-300 group-hover:scale-110" style={{ color: fw.color }} />
+                        <span className={`absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-30 ${isDark ? 'bg-emerald-800 text-emerald-100 border border-emerald-600' : 'bg-emerald-700 text-white'}`}>
                           {fw.name}
-                          <span className={`absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 ${isDark ? 'bg-gray-800' : 'bg-gray-900'}`}></span>
+                          <span className={`absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${isDark ? 'border-t-emerald-800' : 'border-t-emerald-700'}`}></span>
                         </span>
                       </div>
                     );
@@ -698,49 +546,40 @@ const About = () => {
                 </div>
               </div>
 
-              {/* Tools */}
-              <div className={`relative p-8 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-orange-900/30 via-amber-900/20 to-yellow-900/30 border-orange-500/30' : 'bg-gradient-to-br from-orange-50/80 via-amber-50/80 to-yellow-50/80 border-orange-300 shadow-2xl'}`}>
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-amber-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <h3 className="relative text-2xl font-black mb-8 flex items-center gap-3"
+              {/* Backend */}
+              <div className={`relative p-6 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-purple-900/20 via-indigo-900/15 to-blue-900/20 border-purple-500/30' : 'bg-gradient-to-br from-purple-50/80 via-indigo-50/80 to-blue-50/80 border-purple-400/40 shadow-xl'}`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-indigo-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <h3 className="relative text-xl font-bold mb-6 flex items-center gap-3"
                   style={{
                     fontFamily: "'Raleway', sans-serif",
-                    letterSpacing: '2px',
-                    background: isDark ? 'linear-gradient(135deg, #fb923c 0%, #fbbf24 100%)' : 'linear-gradient(135deg, #f97316 0%, #fbbf24 100%)',
+                    letterSpacing: '1px',
+                    background: isDark ? 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)' : 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text'
                   }}
                 >
-                  <FiZap className={`w-7 h-7 ${isDark ? 'text-orange-400' : 'text-orange-600'}`} />
-                  Tools
+                  <FiZap className={`w-6 h-6 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} />
+                  Backend
                 </h3>
-                <div className="flex flex-wrap gap-4">
-                  {tools.map((tool, index) => {
-                    const IconComponent = tool.icon;
+                <div className="flex flex-wrap gap-3">
+                  {backend.map((be, index) => {
+                    const IconComponent = be.icon;
                     return (
                       <div
                         key={index}
-                        className={`group relative p-4 rounded-xl transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 cursor-pointer ${
+                        className={`group relative p-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer ${
                           isDark 
-                            ? 'bg-gray-900/50 hover:bg-gray-900 border border-gray-700/50 hover:border-lime-500/50' 
-                            : 'bg-gray-50 hover:bg-white border border-gray-200 hover:border-lime-400 hover:shadow-lg'
+                            ? 'bg-gradient-to-br from-purple-900/40 to-indigo-900/30 hover:from-purple-800/60 hover:to-indigo-800/50 border border-purple-600/30 hover:border-purple-400/50' 
+                            : 'bg-gradient-to-br from-purple-100/80 to-indigo-100/80 hover:from-purple-200 hover:to-indigo-200 border border-purple-300 hover:border-purple-500 shadow-md hover:shadow-lg'
                         }`}
-                        onMouseEnter={() => setHoveredSkill(tool.name)}
-                        onMouseLeave={() => setHoveredSkill(null)}
                       >
-                        <div 
-                          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                          style={{ boxShadow: `0 0 30px ${tool.color}30` }}
-                        />
-                        <IconComponent 
-                          className="w-10 h-10 transition-all duration-300 group-hover:scale-110" 
-                          style={{ color: tool.color }}
-                        />
-                        <span className={`absolute -bottom-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 whitespace-nowrap z-20 ${
-                          isDark ? 'bg-gray-800 text-white' : 'bg-gray-900 text-white'
-                        }`}>
-                          {tool.name}
-                          <span className={`absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 ${isDark ? 'bg-gray-800' : 'bg-gray-900'}`}></span>
+                        <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                          style={{ boxShadow: `0 0 20px ${isDark ? '#8b5cf6' : '#7c3aed'}20` }} />
+                        <IconComponent className="w-8 h-8 transition-all duration-300 group-hover:scale-110" style={{ color: be.color }} />
+                        <span className={`absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-30 ${isDark ? 'bg-purple-800 text-purple-100 border border-purple-600' : 'bg-purple-700 text-white'}`}>
+                          {be.name}
+                          <span className={`absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${isDark ? 'border-t-purple-800' : 'border-t-purple-700'}`}></span>
                         </span>
                       </div>
                     );
@@ -749,62 +588,130 @@ const About = () => {
               </div>
             </div>
 
-            {/* 360 Rotating Gallery Right Side */}
-            <div className="flex flex-col items-center justify-center mt-8 lg:mt-0">
-              <div 
-                ref={containerRef}
-                className="relative"
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-                onTouchStart={handleMouseDown}
-                onTouchMove={handleMouseMove}
-                onTouchEnd={handleMouseUp}
-                style={{ perspective: '1000px', cursor: isDragging ? 'grabbing' : 'grab' }}
-              >
-                {/* Glow effect behind gallery */}
-                <div className={`absolute inset-0 rounded-full blur-3xl animate-morph ${isDark ? 'bg-neon-green/20' : 'bg-green-400/30'}`} style={{ transform: 'scale(1.5)' }} />
-                
-                <div 
-                  className="relative w-48 h-64 sm:w-56 sm:h-72 md:w-64 md:h-80"
+            {/* Right Column */}
+            <div className="space-y-8">
+              {/* Databases */}
+              <div className={`relative p-6 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-green-900/20 via-emerald-900/15 to-teal-900/20 border-green-500/30' : 'bg-gradient-to-br from-green-50/80 via-emerald-50/80 to-teal-50/80 border-green-400/40 shadow-xl'}`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <h3 className="relative text-xl font-bold mb-6 flex items-center gap-3"
                   style={{
-                    transformStyle: 'preserve-3d',
-                    transform: `rotateY(${rotation}deg)`,
+                    fontFamily: "'Raleway', sans-serif",
+                    letterSpacing: '1px',
+                    background: isDark ? 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)' : 'linear-gradient(135deg, #16a34a 0%, #059669 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
                   }}
                 >
-                  {galleryImages.map((img, index) => {
-                    const angle = (360 / galleryImages.length) * index;
+                  <FiBookOpen className={`w-6 h-6 ${isDark ? 'text-green-400' : 'text-green-600'}`} />
+                  Databases
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {databases.map((db, index) => {
+                    const IconComponent = db.icon;
                     return (
                       <div
                         key={index}
-                        className={`absolute w-28 h-36 sm:w-32 sm:h-44 md:w-40 md:h-52 rounded-xl overflow-hidden shadow-2xl transition-all duration-300 ${isDark ? 'border-2 border-neon-green/30' : 'border-2 border-green-400/30'}`}
-                        style={{
-                          transform: `rotateY(${angle}deg) translateZ(${galleryRadius}px)`,
-                          backfaceVisibility: 'hidden',
-                        }}
+                        className={`group relative p-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer ${
+                          isDark 
+                            ? 'bg-gradient-to-br from-green-900/40 to-emerald-900/30 hover:from-green-800/60 hover:to-emerald-800/50 border border-green-600/30 hover:border-green-400/50' 
+                            : 'bg-gradient-to-br from-green-100/80 to-emerald-100/80 hover:from-green-200 hover:to-emerald-200 border border-green-300 hover:border-green-500 shadow-md hover:shadow-lg'
+                        }`}
                       >
-                        <img
-                          src={img}
-                          alt={`Gallery ${index + 1}`}
-                          className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
-                        {/* Overlay gradient */}
-                        <div className={`absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 ${isDark ? 'bg-gradient-to-t from-neon-green/50 to-transparent' : 'bg-gradient-to-t from-green-900/30 to-transparent'}`} />
+                        <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                          style={{ boxShadow: `0 0 20px ${isDark ? '#22c55e' : '#16a34a'}20` }} />
+                        <IconComponent className="w-8 h-8 transition-all duration-300 group-hover:scale-110" style={{ color: db.color }} />
+                        <span className={`absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-30 ${isDark ? 'bg-green-800 text-green-100 border border-green-600' : 'bg-green-700 text-white'}`}>
+                          {db.name}
+                          <span className={`absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${isDark ? 'border-t-green-800' : 'border-t-green-700'}`}></span>
+                        </span>
                       </div>
                     );
                   })}
                 </div>
               </div>
-              
-              {/* Instruction text */}
-              <p className={`mt-8 text-sm flex items-center gap-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
-                <span className="animate-pulse">👆</span>
-                Drag to rotate the gallery
-              </p>
+
+              {/* Mobile */}
+              <div className={`relative p-6 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-pink-900/20 via-rose-900/15 to-red-900/20 border-pink-500/30' : 'bg-gradient-to-br from-pink-50/80 via-rose-50/80 to-red-50/80 border-pink-400/40 shadow-xl'}`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-rose-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <h3 className="relative text-xl font-bold mb-6 flex items-center gap-3"
+                  style={{
+                    fontFamily: "'Raleway', sans-serif",
+                    letterSpacing: '1px',
+                    background: isDark ? 'linear-gradient(135deg, #ec4899 0%, #ef4444 100%)' : 'linear-gradient(135deg, #db2777 0%, #dc2626 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
+                  <FiStar className={`w-6 h-6 ${isDark ? 'text-pink-400' : 'text-pink-600'}`} />
+                  Mobile
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {mobile.map((mob, index) => {
+                    const IconComponent = mob.icon;
+                    return (
+                      <div
+                        key={index}
+                        className={`group relative p-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer ${
+                          isDark 
+                            ? 'bg-gradient-to-br from-pink-900/40 to-rose-900/30 hover:from-pink-800/60 hover:to-rose-800/50 border border-pink-600/30 hover:border-pink-400/50' 
+                            : 'bg-gradient-to-br from-pink-100/80 to-rose-100/80 hover:from-pink-200 hover:to-rose-200 border border-pink-300 hover:border-pink-500 shadow-md hover:shadow-lg'
+                        }`}
+                      >
+                        <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                          style={{ boxShadow: `0 0 20px ${isDark ? '#ec4899' : '#db2777'}20` }} />
+                        <IconComponent className="w-8 h-8 transition-all duration-300 group-hover:scale-110" style={{ color: mob.color }} />
+                        <span className={`absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-30 ${isDark ? 'bg-pink-800 text-pink-100 border border-pink-600' : 'bg-pink-700 text-white'}`}>
+                          {mob.name}
+                          <span className={`absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${isDark ? 'border-t-pink-800' : 'border-t-pink-700'}`}></span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Tools */}
+              <div className={`relative p-6 rounded-3xl transition-all duration-500 hover:scale-[1.02] backdrop-blur-2xl border-2 overflow-hidden group ${isDark ? 'bg-gradient-to-br from-orange-900/20 via-amber-900/15 to-yellow-900/20 border-orange-500/30' : 'bg-gradient-to-br from-orange-50/80 via-amber-50/80 to-yellow-50/80 border-orange-400/40 shadow-xl'}`}>
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-amber-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <h3 className="relative text-xl font-bold mb-6 flex items-center gap-3"
+                  style={{
+                    fontFamily: "'Raleway', sans-serif",
+                    letterSpacing: '1px',
+                    background: isDark ? 'linear-gradient(135deg, #f97316 0%, #fbbf24 100%)' : 'linear-gradient(135deg, #ea580c 0%, #d97706 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
+                  <FiAward className={`w-6 h-6 ${isDark ? 'text-orange-400' : 'text-orange-600'}`} />
+                  Tools
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {tools.map((tool, index) => {
+                    const IconComponent = tool.icon;
+                    return (
+                      <div
+                        key={index}
+                        className={`group relative p-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer ${
+                          isDark 
+                            ? 'bg-gradient-to-br from-orange-900/40 to-amber-900/30 hover:from-orange-800/60 hover:to-amber-800/50 border border-orange-600/30 hover:border-orange-400/50' 
+                            : 'bg-gradient-to-br from-orange-100/80 to-amber-100/80 hover:from-orange-200 hover:to-amber-200 border border-orange-300 hover:border-orange-500 shadow-md hover:shadow-lg'
+                        }`}
+                      >
+                        <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                          style={{ boxShadow: `0 0 20px ${isDark ? '#f97316' : '#ea580c'}20` }} />
+                        <IconComponent className="w-8 h-8 transition-all duration-300 group-hover:scale-110" style={{ color: tool.color }} />
+                        <span className={`absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded text-xs font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-30 ${isDark ? 'bg-orange-800 text-orange-100 border border-orange-600' : 'bg-orange-700 text-white'}`}>
+                          {tool.name}
+                          <span className={`absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent ${isDark ? 'border-t-orange-800' : 'border-t-orange-700'}`}></span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1047,6 +954,6 @@ const About = () => {
       </div>
     </section>
   );
-};
+});
 
 export default About;

@@ -1934,7 +1934,7 @@ const Projects = () => {
           </div>
           <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
             style={{ fontFamily: 'Inter, sans-serif' }}>
-            Certificates & Accomplishments
+            Recognition & Certificates
           </p>
         </div>
 

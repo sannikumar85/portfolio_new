@@ -6,7 +6,6 @@
     
     <!-- Security Meta Tags -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
     <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     
@@ -18,8 +17,7 @@
       font-src 'self' https://fonts.gstatic.com;
       img-src 'self' data: blob: https://images.unsplash.com;
       media-src 'self' blob:;
-      connect-src 'self' https://formspree.io;
-      frame-ancestors 'none';
+      connect-src 'self' http://localhost:5000 https://formspree.io;
       base-uri 'self';
       form-action 'self' https://formspree.io;
     " />
