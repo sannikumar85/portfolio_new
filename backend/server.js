@@ -34,14 +34,12 @@ const contactLimiter = rateLimit({
 });
 
 // CORS configuration
-const corsOptions = {
-  origin: process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : ['http://localhost:5173', 'http://localhost:5174'],
-  credentials: true,
-  optionsSuccessStatus: 200,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
-};
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: "https://portfolio-new-b6ld.vercel.app",
+  credentials: true
+}));
+
+app.options("*", cors());
 
 // Body parser middleware
 app.use(express.json({ limit: '10mb' }));
