@@ -285,7 +285,7 @@ const About = memo(() => {
               <div className="relative">
                 <div className="relative w-full aspect-[4/5] transition-all duration-500 group-hover:scale-[1.02]">
                   <img
-                    src="https://i.ibb.co/YdQk2Vn/sticker.png"
+                    src="/images/sticker.png"
                     alt="Sanni Kumar Gupta - Full Stack Developer"
                     className="w-full h-full object-contain object-center transition-all duration-700 group-hover:scale-105"
                     style={{ 
