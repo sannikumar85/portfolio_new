@@ -193,7 +193,7 @@ const Home = () => {
               {/* Simple image container - no extra design elements */}
               <div className="relative w-[280px] h-[350px] sm:w-[320px] sm:h-[400px] md:w-[360px] md:h-[450px] lg:w-[400px] lg:h-[500px] transition-all duration-500 group-hover:scale-[1.02]">
                 <img
-                  src="https://i.ibb.co/YdQk2Vn/sticker.png"
+                  src="/images/sticker.png"
                   alt="Sanni Kumar Gupta - Full Stack Developer"
                   className="w-full h-full object-contain object-center transition-all duration-700 group-hover:scale-105"
                   style={{
